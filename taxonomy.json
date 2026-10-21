@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "events": {
+    "view_item": {
+      "trigger": "Product details visible",
+      "required": [
+        "currency",
+        "value",
+        "items"
+      ]
+    },
+    "add_to_cart": {
+      "trigger": "Successful cart update",
+      "required": [
+        "currency",
+        "value",
+        "items"
+      ]
+    },
+    "begin_checkout": {
+      "trigger": "Checkout started",
+      "required": [
+        "currency",
+        "value",
+        "items"
+      ]
+    },
+    "purchase": {
+      "trigger": "Confirmed order, never payment-button click",
+      "required": [
+        "transaction_id",
+        "currency",
+        "value",
+        "items"
+      ]
+    }
+  }
+}

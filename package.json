@@ -1,0 +1,10 @@
+{
+  "name": "ga4-gtm-event-taxonomy",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "demo": "node demo.mjs"
+  }
+}
