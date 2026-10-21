@@ -9,3 +9,6 @@ test('blocks unapproved personal-data fields',()=>{const p=purchase();p.ecommerc
 test('rejects item and total errors',()=>{const p=purchase();p.ecommerce.items[0].quantity=1.5;assert.ok(validate(p).length);p.ecommerce.items=[];assert.ok(validate(p).length);});
 test('clear state, deduplicate purchase, no mutation',()=>{const p=purchase(),layer=[],seen=new Set();assert.equal(pushEvent(layer,p,seen),true);assert.equal(pushEvent(layer,p,seen),false);assert.equal(layer.length,2);assert.deepEqual(layer[0],{ecommerce:null});p.ecommerce.value=0;assert.equal(layer[1].ecommerce.value,35);});
 test('invalid events do not reach dataLayer',()=>{const layer=[];assert.throws(()=>pushEvent(layer,{event:'unknown'}));assert.equal(layer.length,0);});
+
+test('unknown and inherited event names never throw',()=>{for(const event of ['toString','constructor','__proto__','unknown',null,42])assert.deepEqual(validate({event,ecommerce:{}}),['unsupported event']);assert.deepEqual(validate(null),['unsupported event']);});
+test('documented examples and rejection are executable',async()=>{const {example,events}=await import('./examples.mjs');for(const event of events)assert.deepEqual(validate(example(event)),[]);const p=example('purchase');p.ecommerce.value=99;const layer=[];assert.throws(()=>pushEvent(layer,p),/value differs/);assert.equal(layer.length,0);});

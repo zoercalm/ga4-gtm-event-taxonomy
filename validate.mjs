@@ -1,10 +1,12 @@
-import fs from 'node:fs';
-export const taxonomy = JSON.parse(fs.readFileSync(new URL('./taxonomy.json', import.meta.url)));
+const url = new URL('./taxonomy.json', import.meta.url);
+export const taxonomy = typeof window === 'undefined'
+ ? JSON.parse(await (await import('node:fs/promises')).readFile(url, 'utf8'))
+ : await (await fetch(url)).json();
 // A deliberately strict project contract; not an exhaustive GA4 schema.
 export function validate(payload) {
  const errors=[];
- const spec=taxonomy.events[payload?.event];
- if(!spec) return ['unsupported event'];
+ if(typeof payload?.event !== 'string' || !Object.hasOwn(taxonomy.events,payload.event)) return ['unsupported event'];
+ const spec=taxonomy.events[payload.event];
  const e=payload.ecommerce;
  if(!e || typeof e!=='object') return ['ecommerce object required'];
  const allowed=new Set([...spec.required]);

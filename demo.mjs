@@ -1,6 +1,7 @@
-import {pushEvent} from './validate.mjs';
-const dataLayer=[], seen=new Set();
-const purchase={event:'purchase',ecommerce:{transaction_id:'ORDER-DEMO-001',currency:'USD',value:35,items:[{item_id:'SKU-DEMO',price:17.5,quantity:2}]}};
-pushEvent(dataLayer,purchase,seen);
-pushEvent(dataLayer,purchase,seen);
-console.log(JSON.stringify(dataLayer,null,2));
+import {pushEvent,validate} from './validate.mjs';
+import {example,events} from './examples.mjs';
+const layer=[],seen=new Set();
+for(const event of events)pushEvent(layer,example(event),seen);
+console.log(JSON.stringify(layer,null,2));
+console.log('Repeated purchase accepted:',pushEvent(layer,example('purchase'),seen));
+for(const payload of [{event:'constructor'}, {...example('purchase'),ecommerce:{...example('purchase').ecommerce,value:99}}, {event:'purchase',ecommerce:{}}])console.log('Rejected:',validate(payload));
